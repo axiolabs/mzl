@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { LogOut, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 import { api } from "./api";
+import { Avatar } from "./ui";
 
 const LOGO_SOURCES = ["/logo.png", "/images/logo.png"];
 
@@ -67,6 +68,43 @@ export function LogoutButton({ full }: { full?: boolean }) {
     >
       <LogOut className="h-5 w-5" aria-hidden /> {full && "Cerrar sesión"}
     </button>
+  );
+}
+
+export function UserMenu({ name, avatarSrc, isOrganizer, isAdmin }: { name: string; avatarSrc: string | null; isOrganizer: boolean; isAdmin: boolean }) {
+  const [open, setOpen] = useState(false);
+  const wrap = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setOpen(false), btn.current?.focus());
+    const onClick = (e: MouseEvent) => { if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onClick);
+    return () => { window.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onClick); };
+  }, [open]);
+  const item = "block rounded-lg px-3 py-2 text-sm font-semibold hover:bg-black/5";
+  return (
+    <div ref={wrap} className="relative">
+      <button ref={btn} type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="menu" aria-label="Menú de cuenta" className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-black/5">
+        <Avatar src={avatarSrc} name={name} size={32} />
+        <span className="text-sm font-semibold">{name}</span>
+        <ChevronDown className={`h-4 w-4 text-black/50 transition ${open ? "rotate-180" : ""}`} aria-hidden />
+      </button>
+      {open && (
+        <div role="menu" className="fade-in absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-black/10 bg-white p-2 shadow-lg">
+          <Link href="/app/perfil" role="menuitem" onClick={() => setOpen(false)} className={item}>Ver perfil</Link>
+          <Link href="/app/mis-parches" role="menuitem" onClick={() => setOpen(false)} className={item}>Mis parches</Link>
+          <Link href="/app/solicitudes" role="menuitem" onClick={() => setOpen(false)} className={item}>Mis solicitudes</Link>
+          <Link href="/app/favoritos" role="menuitem" onClick={() => setOpen(false)} className={item}>Favoritos</Link>
+          <Link href="/app/configuracion" role="menuitem" onClick={() => setOpen(false)} className={item}>Configuración</Link>
+          <Link href="/app/organizador" role="menuitem" onClick={() => setOpen(false)} className={item}>{isOrganizer ? "Panel de organizador" : "Ser organizador"}</Link>
+          {isAdmin && <Link href="/app/admin" role="menuitem" onClick={() => setOpen(false)} className={item}>Administración</Link>}
+          <div className="my-1 border-t border-black/5" />
+          <LogoutButton full />
+        </div>
+      )}
+    </div>
   );
 }
 
