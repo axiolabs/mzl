@@ -81,7 +81,6 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
       interests: profile.interests,
       ...p0,
     });
-    setMsg(null);
     setErrors({});
   }, [profile]);
   const toggle = (k: "showBarrio" | "showInterests" | "showUpcoming" | "useBarrioForRecommendations" | "emailNotifications", label: string, hint?: string) => (
@@ -96,7 +95,7 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
       setBusy(true); setErrors({});
       const r = await api("profile", { method: "PATCH", body: parsed.data });
       setBusy(false);
-      if (r.ok) { setMsg({ tone: "success", text: "Perfil guardado." }); router.refresh(); } else { setErrors(r.fields ?? {}); setMsg({ tone: "error", text: r.message }); }
+      if (r.ok) { setMsg({ tone: "success", text: "Perfil guardado." }); router.refresh(); setTimeout(() => setMsg(null), 3000); } else { setErrors(r.fields ?? {}); setMsg({ tone: "error", text: r.message }); }
     }}>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field id="firstName" label="Nombre" error={errors.firstName}><Input id="firstName" value={v.firstName} onChange={(e) => setV({ ...v, firstName: e.target.value })} /></Field>
