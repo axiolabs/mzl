@@ -6,6 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "MZL Parchado — Menos pantalla, más parche", template: "%s · MZL Parchado" },
   description: "Descubre planes, crea parches y conecta con personas en Manizales, Caldas.",
+  icons: { icon: "/icon.png" },
 };
 export const viewport: Viewport = { themeColor: "#ff5a3c", width: "device-width", initialScale: 1 };
 

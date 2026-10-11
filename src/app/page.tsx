@@ -32,9 +32,9 @@ export default async function Home() {
           <p className="mt-5 max-w-xl text-lg text-white/85">Encuentra planes reales cerca de ti: basket en el Bosque Popular, café en El Cable, atardeceres en Chipre. Crea tu parche y conoce gente con tus mismos gustos.</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/demo" className={linkBtn("primary") + " text-base"}>Explorar demo <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-            <Link href="/registro" className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-base font-semibold text-ink hover:bg-white/90">Crear cuenta gratis</Link>
+            {!viewer && <Link href="/registro" className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-base font-semibold text-ink hover:bg-white/90">Crear cuenta gratis</Link>}
           </div>
-          <p className="mt-3 text-sm text-white/70">La demo no pide correo ni contraseña y usa datos ficticios.</p>
+          {!viewer && <p className="mt-3 text-sm text-white/70">La demo no pide correo ni contraseña y usa datos ficticios.</p>}
         </div>
       </section>
 
