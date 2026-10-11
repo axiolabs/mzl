@@ -64,6 +64,11 @@ export async function SiteHeader() {
                   <Bell className="h-5 w-5" aria-hidden />
                   {unread > 0 && <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-accent" aria-hidden />}
                 </Link>
+                <Link href="/app/mis-parches" className="hidden lg:flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Mis parches</Link>
+                <Link href="/app/solicitudes" className="hidden xl:flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Mis solicitudes</Link>
+                <Link href="/app/favoritos" className="hidden xl:flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Favoritos</Link>
+                <Link href="/app/configuracion" className="hidden lg:flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Configuración</Link>
+                <Link href="/app/perfil" className="hidden lg:flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Mi perfil</Link>
                 <Link href="/app" className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-black/5">
                   <Avatar src={avatarUrl(user.avatarMediaId)} name={user.firstName} size={32} />
                   <span className="text-sm font-semibold">{user.firstName}</span>
