@@ -6,7 +6,7 @@ import { notifications } from "@/db/schema";
 import { getSessionUser } from "@/server/core";
 import { avatarUrl } from "@/server/serializers";
 import { Avatar } from "./ui";
-import { LogoBadge, MobileMenu, LogoutButton } from "./site-client";
+import { LogoBadge, MobileMenu, LogoutButton, ThemeToggle } from "./site-client";
 
 export function Logo() {
   return (
@@ -44,8 +44,6 @@ export async function SiteHeader() {
         { href: "/info/seguridad", label: "Ayuda y seguridad" },
       ]
     : [
-        { href: "/explorar", label: "Explorar" },
-        { href: "/mapa", label: "Mapa" },
         { href: "/info/como-funciona", label: "Cómo funciona" },
         { href: "/demo", label: "Explorar demo" },
         { href: "/login", label: "Iniciar sesión" },
@@ -55,31 +53,35 @@ export async function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-black/5 bg-cream/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Logo />
-        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
-          <Link href="/explorar" className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5"><Compass className="h-4 w-4" aria-hidden />Explorar</Link>
-          <Link href="/mapa" className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5"><Map className="h-4 w-4" aria-hidden />Mapa</Link>
-          {user ? (
-            <>
-              <Link href="/app/crear" className="flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark"><PlusCircle className="h-4 w-4" aria-hidden />Crear</Link>
-              <Link href="/app/notificaciones" className="relative rounded-full p-2 hover:bg-black/5" aria-label={`Notificaciones${unread ? `, ${unread} sin leer` : ""}`}>
-                <Bell className="h-5 w-5" aria-hidden />
-                {unread > 0 && <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-accent" aria-hidden />}
-              </Link>
-              <Link href="/app" className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-black/5">
-                <Avatar src={avatarUrl(user.avatarMediaId)} name={user.firstName} size={32} />
-                <span className="text-sm font-semibold">{user.firstName}</span>
-              </Link>
-              <LogoutButton />
-            </>
-          ) : (
-            <>
-              <Link href="/demo" className="rounded-full px-3 py-2 text-sm font-semibold text-teal hover:bg-teal/10">Explorar demo</Link>
-              <Link href="/login" className="rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Entrar</Link>
-              <Link href="/registro" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-black">Crear cuenta</Link>
-            </>
-          )}
-        </nav>
-        <MobileMenu links={links} loggedIn={!!user} />
+        <div className="flex items-center gap-1">
+          <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+            {user ? (
+              <>
+                <Link href="/explorar" className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5"><Compass className="h-4 w-4" aria-hidden />Explorar</Link>
+                <Link href="/mapa" className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5"><Map className="h-4 w-4" aria-hidden />Mapa</Link>
+                <Link href="/app/crear" className="flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-dark"><PlusCircle className="h-4 w-4" aria-hidden />Crear</Link>
+                <Link href="/app/notificaciones" className="relative rounded-full p-2 hover:bg-black/5" aria-label={`Notificaciones${unread ? `, ${unread} sin leer` : ""}`}>
+                  <Bell className="h-5 w-5" aria-hidden />
+                  {unread > 0 && <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-accent" aria-hidden />}
+                </Link>
+                <Link href="/app" className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-black/5">
+                  <Avatar src={avatarUrl(user.avatarMediaId)} name={user.firstName} size={32} />
+                  <span className="text-sm font-semibold">{user.firstName}</span>
+                </Link>
+                <LogoutButton />
+              </>
+            ) : (
+              <>
+                <Link href="/info/como-funciona" className="rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Cómo funciona</Link>
+                <Link href="/demo" className="rounded-full px-3 py-2 text-sm font-semibold text-teal hover:bg-teal/10">Explorar demo</Link>
+                <Link href="/login" className="rounded-full px-3 py-2 text-sm font-semibold hover:bg-black/5">Entrar</Link>
+                <Link href="/registro" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-black">Crear cuenta</Link>
+              </>
+            )}
+          </nav>
+          <ThemeToggle />
+          <MobileMenu links={links} loggedIn={!!user} />
+        </div>
       </div>
     </header>
   );

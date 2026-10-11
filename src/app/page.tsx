@@ -1,14 +1,25 @@
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, MapPinned, ShieldCheck, Users } from "lucide-react";
-import { PlanCard } from "@/components/plan-card";
+import { PlanCard, type CardPlan } from "@/components/plan-card";
 import { EmptyState, linkBtn } from "@/components/ui";
+import { getDemoData } from "@/lib/demo-data";
+import { demoPlanView } from "@/lib/demo-view";
+import { getSessionUser } from "@/server/core";
 import { listPublicPlans } from "@/server/plans";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let plans: Awaited<ReturnType<typeof listPublicPlans>>["items"] = [];
-  try { plans = (await listPublicPlans({ pageSize: 6 })).items; } catch {}
+  const viewer = await getSessionUser();
+  let plans: CardPlan[] = [];
+  let isDemo = false;
+  if (viewer) {
+    try { plans = (await listPublicPlans({ pageSize: 6 })).items; } catch {}
+  } else {
+    isDemo = true;
+    const d = getDemoData();
+    plans = d.plans.filter((p) => p.status !== "finished").slice(0, 6).map((p) => demoPlanView(p, d.users, d.categories));
+  }
   return (
     <>
       <section className="relative overflow-hidden">
@@ -45,11 +56,11 @@ export default async function Home() {
 
       <section className="mx-auto max-w-6xl px-4">
         <div className="mb-6 flex items-end justify-between">
-          <div><h2 className="text-2xl font-extrabold">Próximos parches</h2><p className="text-black/60">Planes publicados por la comunidad.</p></div>
-          <Link href="/explorar" className="font-semibold text-accent-dark">Ver todos →</Link>
+          <div><h2 className="text-2xl font-extrabold">Próximos parches</h2><p className="text-black/60">{isDemo ? "Así se ven los parches en la demo." : "Planes publicados por la comunidad."}</p></div>
+          <Link href={viewer ? "/explorar" : "/demo"} className="font-semibold text-accent-dark">Ver todos →</Link>
         </div>
         {plans.length ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{plans.map((p) => <PlanCard key={p.id} plan={p} href={`/parches/${p.id}`} />)}</div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{plans.map((p) => <PlanCard key={p.id} plan={p} href={`${isDemo ? "/demo/parches" : "/parches"}/${p.id}`} />)}</div>
         ) : (
           <EmptyState title="Todavía no hay parches publicados">Sé la primera persona en <Link className="font-semibold text-accent-dark" href="/registro">crear uno</Link> o mira cómo se vería en la <Link className="font-semibold text-accent-dark" href="/demo">demo</Link>.</EmptyState>
         )}

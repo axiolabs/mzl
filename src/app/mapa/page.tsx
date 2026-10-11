@@ -1,11 +1,15 @@
+import { redirect } from "next/navigation";
 import { MapView } from "@/components/map-view";
 import { PageTitle } from "@/components/ui";
+import { getSessionUser } from "@/server/core";
 import { getMeta } from "@/server/modules/plans";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Mapa de actividades" };
 
 export default async function MapaPage() {
+  const viewer = await getSessionUser();
+  if (!viewer) redirect("/demo");
   const meta = await getMeta();
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">

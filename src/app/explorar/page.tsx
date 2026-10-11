@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Compass } from "lucide-react";
 import { PlanCard } from "@/components/plan-card";
 import { EmptyState, Input, PageTitle, Select } from "@/components/ui";
@@ -14,6 +15,7 @@ type SP = Promise<Record<string, string | undefined>>;
 export default async function Explore({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const viewer = await getSessionUser();
+  if (!viewer) redirect("/demo");
   const meta = await getMeta();
   const page = Math.max(1, Number(sp.page) || 1);
   const range = sp.range ?? "all";

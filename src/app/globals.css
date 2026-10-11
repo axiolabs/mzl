@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-ink: #16161f;
   --color-cream: #fbf7f2;
@@ -12,6 +14,20 @@
 
 html { scroll-behavior: smooth; }
 body { background: var(--color-cream); color: var(--color-ink); }
+
+/* Modo oscuro: se activa con la clase .dark en <html>. */
+.dark { color-scheme: dark; --color-cream: #0c0c12; --color-black: #eef0f4; --color-accent: #ff6a4d; --color-accent-dark: #ff8f74; --color-teal: #3ec9b8; }
+.dark body { background: #0c0c12; color: #eef0f4; }
+.dark .text-ink { color: #eef0f4; }
+.dark .bg-white { background-color: #16161e; }
+.dark .bg-white\/95 { background-color: rgb(22 22 30 / 0.95); }
+.dark .bg-white\/90 { background-color: rgb(22 22 30 / 0.9); }
+.dark .bg-white\/60 { background-color: rgb(22 22 30 / 0.6); }
+.dark .bg-ink { background-color: #262633; }
+.dark .bg-ink\/85 { background-color: rgb(38 38 51 / 0.85); }
+.dark .hover\:bg-black:hover { background-color: #333342; }
+.dark .leaflet-container { background: #16161e; }
+.dark .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9); }
 :focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; border-radius: 6px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .fade-in { animation: fadeIn .35s ease-out both; }

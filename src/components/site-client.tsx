@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { LogOut, Menu, Sparkles, X } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { LogOut, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 import { api } from "./api";
 
 const LOGO_SOURCES = ["/logo.png", "/images/logo.png"];
@@ -18,6 +18,35 @@ export function LogoBadge() {
         <Sparkles className="h-5 w-5" />
       )}
     </span>
+  );
+}
+
+const subscribeTheme = (cb: () => void) => {
+  const o = new MutationObserver(cb);
+  o.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => o.disconnect();
+};
+const getTheme = () => document.documentElement.classList.contains("dark");
+const getThemeServer = () => false;
+
+export function ThemeToggle() {
+  const dark = useSyncExternalStore(subscribeTheme, getTheme, getThemeServer);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const next = !document.documentElement.classList.contains("dark");
+        document.documentElement.classList.toggle("dark", next);
+        try {
+          localStorage.setItem("theme", next ? "dark" : "light");
+        } catch {}
+      }}
+      className="rounded-full p-2 hover:bg-black/5"
+      aria-label={dark ? "Activar modo claro" : "Activar modo oscuro"}
+      title={dark ? "Modo claro" : "Modo oscuro"}
+    >
+      {dark ? <Sun className="h-5 w-5" aria-hidden /> : <Moon className="h-5 w-5" aria-hidden />}
+    </button>
   );
 }
 
