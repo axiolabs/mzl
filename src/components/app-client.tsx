@@ -65,13 +65,27 @@ type Profile = { firstName: string; lastName: string; bio: string | null; barrio
 
 export function ProfileEditor({ profile, categories, barrios }: { profile: Profile; categories: { id: number; name: string }[]; barrios: { id: number; name: string }[] }) {
   const router = useRouter();
-  const p0 = profile.preferences ?? { showBarrio: false, showInterests: true, showUpcoming: true, useBarrioForRecommendations: false, emailNotifications: true };
+  const prefsRaw = profile.preferences as any | null;
+  const p0 = prefsRaw ? {
+    showBarrio: prefsRaw.showBarrio,
+    showInterests: prefsRaw.showInterests,
+    showUpcoming: prefsRaw.showUpcoming,
+    useBarrioForRecommendations: prefsRaw.useBarrioForRecommendations,
+    emailNotifications: prefsRaw.emailNotifications,
+  } : { showBarrio: false, showInterests: true, showUpcoming: true, useBarrioForRecommendations: false, emailNotifications: true };
   const [v, setV] = useState({ firstName: profile.firstName, lastName: profile.lastName, bio: profile.bio ?? "", barrioId: profile.barrioId ? String(profile.barrioId) : "", interests: profile.interests, ...p0 });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<Msg>(null);
   const [busy, setBusy] = useState(false);
   useEffect(() => {
-    const p0 = profile.preferences ?? { showBarrio: false, showInterests: true, showUpcoming: true, useBarrioForRecommendations: false, emailNotifications: true };
+    const prefsRaw = profile.preferences as any | null;
+    const p0 = prefsRaw ? {
+      showBarrio: prefsRaw.showBarrio,
+      showInterests: prefsRaw.showInterests,
+      showUpcoming: prefsRaw.showUpcoming,
+      useBarrioForRecommendations: prefsRaw.useBarrioForRecommendations,
+      emailNotifications: prefsRaw.emailNotifications,
+    } : { showBarrio: false, showInterests: true, showUpcoming: true, useBarrioForRecommendations: false, emailNotifications: true };
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setV({
       firstName: profile.firstName,
@@ -89,15 +103,23 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
   return (
     <form noValidate className="space-y-6" onSubmit={async (e) => {
       e.preventDefault();
-      console.log("[ProfileEditor] submit fired", v);
-      const body = { ...v, barrioId: v.barrioId ? Number(v.barrioId) : null };
+      const body = {
+        firstName: v.firstName,
+        lastName: v.lastName,
+        bio: v.bio,
+        barrioId: v.barrioId ? Number(v.barrioId) : null,
+        interests: v.interests,
+        showBarrio: v.showBarrio,
+        showInterests: v.showInterests,
+        showUpcoming: v.showUpcoming,
+        useBarrioForRecommendations: v.useBarrioForRecommendations,
+        emailNotifications: v.emailNotifications,
+      };
       const parsed = profileSchema.safeParse(body);
-      console.log("[ProfileEditor] parsed", parsed.success);
-      if (!parsed.success) { const fe = fieldErrors(parsed.error); console.log("[ProfileEditor] validation errors", fe); setErrors(fe); setMsg({ tone: "error", text: "Revisa los campos del formulario." }); return; }
+      if (!parsed.success) { setErrors(fieldErrors(parsed.error)); return; }
       setBusy(true); setErrors({});
       const r = await api("profile", { method: "PATCH", body: parsed.data });
       setBusy(false);
-      console.log("[ProfileEditor] PATCH response:", r);
       if (r.ok) { setMsg({ tone: "success", text: "Perfil guardado." }); router.refresh(); setTimeout(() => setMsg(null), 3000); } else { setErrors(r.fields ?? {}); setMsg({ tone: "error", text: r.message }); }
     }}>
       <div className="grid gap-4 sm:grid-cols-2">
