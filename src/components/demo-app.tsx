@@ -46,7 +46,7 @@ export function DemoApp({ data }: { data: Data }) {
       <div role="tabpanel" className="fade-in">
         {tab === "inicio" && (
           <div className="space-y-6">
-            <h1 className="text-3xl font-extrabold">¡Hola, {me.name.split(" ")[0]}! 👋</h1>
+            <h1 className="text-3xl font-extrabold">¡Hola, {me.name.split(" ")[0]}!</h1>
             <h2 className="flex items-center gap-2 text-xl font-bold"><Sparkles className="h-5 w-5 text-accent" aria-hidden />Recomendados para ti (ejemplo)</h2>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{recs.slice(0, 6).map(({ p, reasons }) => <PlanCard key={p.id} plan={p} href={`/demo/parches/${p.id}`} reasons={reasons} />)}</div>
           </div>

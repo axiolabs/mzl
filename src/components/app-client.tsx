@@ -70,6 +70,20 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [msg, setMsg] = useState<Msg>(null);
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const p0 = profile.preferences ?? { showBarrio: false, showInterests: true, showUpcoming: true, useBarrioForRecommendations: false, emailNotifications: true };
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setV({
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      bio: profile.bio ?? "",
+      barrioId: profile.barrioId ? String(profile.barrioId) : "",
+      interests: profile.interests,
+      ...p0,
+    });
+    setMsg(null);
+    setErrors({});
+  }, [profile]);
   const toggle = (k: "showBarrio" | "showInterests" | "showUpcoming" | "useBarrioForRecommendations" | "emailNotifications", label: string, hint?: string) => (
     <label className="flex items-start gap-3 rounded-xl p-2 hover:bg-black/5"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#ff5a3c]" checked={v[k]} onChange={(e) => setV({ ...v, [k]: e.target.checked })} /><span><span className="text-sm font-semibold">{label}</span>{hint && <span className="block text-xs text-black/55">{hint}</span>}</span></label>
   );
