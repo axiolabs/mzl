@@ -95,6 +95,7 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
       setBusy(true); setErrors({});
       const r = await api("profile", { method: "PATCH", body: parsed.data });
       setBusy(false);
+      console.log("[ProfileEditor] PATCH response:", r);
       if (r.ok) { setMsg({ tone: "success", text: "Perfil guardado." }); router.refresh(); setTimeout(() => setMsg(null), 3000); } else { setErrors(r.fields ?? {}); setMsg({ tone: "error", text: r.message }); }
     }}>
       <div className="grid gap-4 sm:grid-cols-2">
