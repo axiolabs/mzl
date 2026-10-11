@@ -2,8 +2,24 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, Sparkles, X } from "lucide-react";
 import { api } from "./api";
+
+const LOGO_SOURCES = ["/logo.png", "/images/logo.png"];
+
+export function LogoBadge() {
+  const [i, setI] = useState(0);
+  return (
+    <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl bg-accent text-white shadow-sm" aria-hidden>
+      {i < LOGO_SOURCES.length ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={LOGO_SOURCES[i]} alt="" className="h-full w-full object-cover" onError={() => setI((n) => n + 1)} />
+      ) : (
+        <Sparkles className="h-5 w-5" />
+      )}
+    </span>
+  );
+}
 
 export function LogoutButton({ full }: { full?: boolean }) {
   const router = useRouter();

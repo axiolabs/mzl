@@ -1,19 +1,17 @@
 import Link from "next/link";
 import { and, eq, isNull, sql } from "drizzle-orm";
-import { Bell, Compass, Map, PlusCircle, Sparkles } from "lucide-react";
+import { Bell, Compass, Map, PlusCircle } from "lucide-react";
 import { db } from "@/db";
 import { notifications } from "@/db/schema";
 import { getSessionUser } from "@/server/core";
 import { avatarUrl } from "@/server/serializers";
 import { Avatar } from "./ui";
-import { MobileMenu, LogoutButton } from "./site-client";
+import { LogoBadge, MobileMenu, LogoutButton } from "./site-client";
 
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2 font-extrabold tracking-tight" aria-label="MZL Parchado, inicio">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent text-white shadow-sm" aria-hidden>
-        <Sparkles className="h-5 w-5" />
-      </span>
+      <LogoBadge />
       <span className="text-lg leading-none">MZL <span className="text-accent">Parchado</span></span>
     </Link>
   );
