@@ -89,9 +89,11 @@ export function ProfileEditor({ profile, categories, barrios }: { profile: Profi
   return (
     <form noValidate className="space-y-6" onSubmit={async (e) => {
       e.preventDefault();
+      console.log("[ProfileEditor] submit fired", v);
       const body = { ...v, barrioId: v.barrioId ? Number(v.barrioId) : null };
       const parsed = profileSchema.safeParse(body);
-      if (!parsed.success) { setErrors(fieldErrors(parsed.error)); return; }
+      console.log("[ProfileEditor] parsed", parsed.success);
+      if (!parsed.success) { const fe = fieldErrors(parsed.error); console.log("[ProfileEditor] validation errors", fe); setErrors(fe); setMsg({ tone: "error", text: "Revisa los campos del formulario." }); return; }
       setBusy(true); setErrors({});
       const r = await api("profile", { method: "PATCH", body: parsed.data });
       setBusy(false);
